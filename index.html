@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Bilim Check</title>
+    <style>
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            padding: 20px;
+            color: #2e3b2f;
+            display: flex;
+            justify-content: center;
+            background:
+                radial-gradient(#cfe6d6 1px, transparent 1px),
+                #f2f6f3;
+            background-size: 18px 18px;
+        }
+
+        .container {
+            width: 900px;
+            max-width: 95%;
+            text-align: center;
+            padding-bottom: 80px; /* место под подпись */
+        }
+
+        h2 {
+            margin: 10px 0 4px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #3c7a52;
+            margin-bottom: 22px;
+            font-weight: 500;
+        }
+
+        .block {
+            background: #e7f3ea;
+            padding: 18px;
+            margin-bottom: 18px;
+            border-radius: 16px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+        }
+
+        .sor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .sor-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sor-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .middle {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .half {
+            width: 300px;
+        }
+
+        input {
+            width: 70px;
+            padding: 6px;
+            border-radius: 8px;
+            border: 1px solid #b6d2bf;
+            outline: none;
+            background: #f9fffb;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        input:focus {
+            border-color: #6fa883;
+        }
+
+        .result {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            font-size: 18px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+            margin-top: 10px;
+        }
+
+        .grade {
+            font-size: 30px;
+            margin-top: 10px;
+            color: #3c7a52;
+        }
+
+        .error {
+            color: #c0392b;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 14px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 16px;
+            color: #5f7f6c;
+            pointer-events: none;
+        }
+
+        /* ===== Адаптив для телефонов ===== */
+        @media (max-width: 600px) {
+            h2 {
+                font-size: 26px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+                margin-bottom: 16px;
+            }
+
+            .sor-grid {
+                grid-template-columns: 1fr; /* все СОР в колонку */
+            }
+
+            .middle {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .half {
+                width: 95%; /* блоки растягиваются */
+            }
+
+            input {
+                width: 60px;
+                font-size: 13px;
+            }
+
+            .result {
+                font-size: 16px;
+            }
+
+            .grade {
+                font-size: 26px;
+            }
+
+            footer {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Bilim Check</h2>
+    <div class="subtitle">Проверь свою успеваемость</div>
+
+    <div class="block">
+        <h3>СОР</h3>
+        <div class="sor-grid">
+            <div class="sor-column">
+                <div class="sor-item">1 СОР <input oninput="calculate()" id="sor1"> / <input oninput="calculate()" id="sor1max"></div>
+                <div class="sor-item">2 СОР <input oninput="calculate()" id="sor2"> / <input oninput="calculate()" id="sor2max"></div>
+            </div>
+            <div class="sor-column">
+                <div class="sor-item">3 СОР <input oninput="calculate()" id="sor3"> / <input oninput="calculate()" id="sor3max"></div>
+                <div class="sor-item">4 СОР <input oninput="calculate()" id="sor4"> / <input oninput="calculate()" id="sor4max"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="middle">
+        <div class="block half">
+            <h3>Формативные</h3>
+            Сумма баллов<br>
+            <input oninput="calculate()" id="formSum"><br><br>
+            Количество ФО<br>
+            <input oninput="calculate()" id="formCount">
+        </div>
+
+        <div class="block half">
+            <h3>СОЧ</h3>
+            <input oninput="calculate()" id="soch"> /
+            <input oninput="calculate()" id="sochMax">
+        </div>
+    </div>
+
+    <div class="result" id="output">
+        Введите данные для расчёта
+    </div>
+
+</div>
+
+<footer>
+    Designed by Chuessenko Maxim.<br>
+    2026
+</footer>
+
+<script>
+function calculate() {
+    let sorPoints = 0;
+    let sorMax = 0;
+
+    for (let i = 1; i <= 4; i++) {
+        sorPoints += Number(document.getElementById("sor" + i).value || 0);
+        sorMax += Number(document.getElementById("sor" + i + "max").value || 0);
+    }
+
+    let sorPercent = sorMax ? (sorPoints / sorMax) * 25 : 0;
+
+    let formSum = Number(document.getElementById("formSum").value || 0);
+    let formCount = Number(document.getElementById("formCount").value || 0);
+    let formPercent = formCount ? (formSum / (formCount * 10)) * 25 : 0;
+
+    let soch = Number(document.getElementById("soch").value || 0);
+    let sochMax = Number(document.getElementById("sochMax").value || 0);
+    let sochPercent = sochMax ? (soch / sochMax) * 50 : 0;
+
+    let total = Math.round(sorPercent + formPercent + sochPercent);
+
+    if (total > 100) {
+        document.getElementById("output").innerHTML =
+            `<div class="error">Где-то ошибка…</div>`;
+        return;
+    }
+
+    let grade = 1;
+    if (total >= 85) grade = 5;
+    else if (total >= 65) grade = 4;
+    else if (total >= 45) grade = 3;
+    else if (total >= 25) grade = 2;
+
+    document.getElementById("output").innerHTML = `
+        СОР: ${sorPercent.toFixed(1)}%<br>
+        Формативные: ${formPercent.toFixed(1)}%<br>
+        СОЧ: ${sochPercent.toFixed(1)}%<br><br>
+        <b>Итог: ${total}%</b>
+        <div class="grade">Оценка: ${grade}</div>
+    `;
+}
+</script>
+
+</body>
+</html>
